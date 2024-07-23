@@ -1,0 +1,282 @@
+basicTemplate.html
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<style>
+nav{background-color: lightblue;padding: 15px; }
+nav a {
+color: #fff; /* Text color */
+text-decoration: none; /* Remove underline */
+padding: 10px 20px; /* Padding around each link */
+margin: 0px 10px; /* Spacing between links */
+border-radius: 5px; /* Rounded corners */
+background-color: #555;
+flex-wrap: wrap;
+}
+nav a:hover {
+background-color:aqua;/* Background color on hover */
+}
+ul {
+list-style: none;
+margin: 0;
+padding: 0;
+display: flex; /* Use flexbox */
+flex-wrap: wrap; /* Allow items to wrap to the next line */
+flex-direction: row; /* Display items in a column */
+}
+li {
+margin-right: 20px;
+margin-bottom: 25px;
+}
+</style>
+		<title>
+{% block title %} {% endblock %}
+</title>
+	</head>
+	<body>
+		<center>
+			<h1 style="background-color: blue;color:yellow"> STUDENT COURSE REGISTRATION PORTAL</h1>
+		</center>
+		<nav>
+			<ul>
+				<li>
+					<a href="/home/">HOME</a>
+				</li>
+				<li>
+					<a href="/studentlist/">STUDENT LIST</a>
+				</li>
+				<li>
+					<a href="/courselist/">COURSE LIST</a>
+				</li>
+				<li>
+					<a href="/register/">REGISTER</a>
+				</li>
+				<li>
+					<a href="/enrolledlist/">ENROLLED LIST</a>
+				</li>
+				<li>
+					<a href="/addproject/">ADD PROJECT</a>
+				</li>
+				<li>
+					<a href="/genericlistviewstudent/">GENERIC STUDENT LIST VIEW</a>
+				</li>
+				<li>
+					<a href="/download_course_table_as_csv/">DOWNLOAD COURSE AS CSV</a>
+				</li>
+				<li>
+					<a href="/download_course_table_as_pdf/">DWONLOAD COURSE AS PDF</a>
+				</li>
+			</ul>
+		</nav>
+		<section>
+{% block content %} {% endblock %}
+</section>
+		<footer>
+			<hr/>
+			<center>
+&copy; Designed and Developeb by Vijay Kumar
+</center>
+		</footer>
+	</body>
+</html>
+
+
+home.html
+
+{% extends 'basicTemplate.html' %}
+{% block title %} Home Page {% endblock %}
+{% block content %}
+<li>Click on Student List to get the List of students</li>
+<li> Click on Course List to get the list of courses</li>
+<li>click on register to enroll student to a course</li>
+{% endblock %}
+
+
+studentlist.html
+
+{% extends 'basicTemplate.html' %}
+{% block title %} Student List {% endblock %}
+{% block content%}
+<h1>Student List</h1>
+<table border="1">
+	<tr>
+		<th>
+USN
+</th>
+		<th>
+NAME
+</th>
+		<th>
+		SEM
+</th>
+	</tr>
+{% for s in student_list %}
+<tr>
+		<td>{{s.usn}}</td>
+		<td>{{s.name}}</td>
+		<td>{{s.sem}}</td>
+	</tr>
+{% endfor %}
+</table>
+{% endblock %}
+
+
+courselist.html
+
+{% extends 'basicTemplate.html' %}
+{% block title %} Course List {% endblock %}
+{% block content%}
+<h1> Course List</h1>
+<table border="1">
+	<tr>
+		<th>
+Sub Code
+</th>
+		<th>
+Sub Name
+</th>
+		<th>
+Credits
+</th>
+{% for c in course_list %}
+<tr>
+			<td>{{c.courseCode}}</td>
+			<td>{{c.courseName}}</td>
+			<td>{{c.courseCredits}}</td>
+		</tr>
+{% endfor %}
+</table>
+{% endblock %}
+
+
+enrolledlist.html
+
+{% extends 'basicTemplate.html' %}
+{% block title %} Course Registration Details {% endblock %}
+{% block content %}
+<form method="POST" action="">
+{% csrf_token %}
+Select Course:
+<select name="course">
+{% for c in Course_List %}
+<option value="{{c.id}}">{{c.courseCode}}</option>
+{% endfor %}
+</select>
+	<input type="submit" value="Search"/>
+{% if student_list %}
+<h1> List of Students registered of the course {{course.courseCode}}</h1>
+	<table border="1">
+		<tr>
+			<th>
+USN
+</th>
+			<th>
+NAME
+</th>
+			<th>
+SEM
+</th>
+		</tr>
+{% for s in student_list %}
+<tr>
+			<td>{{s.usn}}</td>
+			<td>{{s.name}}</td>
+			<td>{{s.sem}}</td>
+		</tr>
+{% endfor %}
+</table>
+{% endif %}
+</form>
+{% endblock %}
+
+
+register.html
+{
+{% extends 'basicTemplate.html' %}
+{% block title %} Course Register Page {% endblock %}
+{% block content %}
+<h1> Student Course Registration</h1>
+<form method="POST" action="">
+{% csrf_token %}
+Select USN:
+<select name="student">
+{% for s in student_list %}
+<option value="{{s.id}}">{{s.usn}}</option>
+{% endfor %}
+</select>
+Select Course:
+<select name="course">
+{% for c in course_list %}
+<option value="{{c.id}}">{{c.courseCode}}</option>
+{% endfor %}
+</select>
+	<input type="submit" value="ENROLL"/>
+</form>
+{% endblock %}
+}
+
+P9 Start
+
+projectreg.html
+
+{% extends 'basicTemplate.html' %}
+{% block title %} Project Details Registration {% endblock %}
+{% block content %}
+<form method="POST" action="">
+{% csrf_token %}
+<table border="1">
+{{ form.as_table }}
+<tr>
+			<td>
+				<input type="submit" value="Add Project"/>
+			</td>
+		</tr>
+	</table>
+</form>
+{% endblock %}
+
+
+P10 Start
+
+GenericListViewStudent.html
+
+{% extends 'basicTemplate.html' %}
+{% block title %} Generic Student List View {% endblock %}
+{% block content %}
+{% if student_list %}
+<table border="1">
+	<tr>
+		<th>USN</th>
+		<th>Courses Enrolled</th>
+	</tr>
+{% for student in student_list %}
+<tr>
+		<td>
+			<a href="/genericdetailedviewstudent/{{student.pk}}">{{student.usn}}</a>
+		</td>
+		<td>
+{% for course in student.courses.all %}
+<span>{{course.courseName}}</span>
+{% endfor %}
+</td>
+	</tr>
+{% endfor %}
+</table>
+{% else %}
+<h1>No Students Enrolled</h1>
+{% endif %}
+{% endblock %}
+
+
+GenericDetailedViewStudent.html
+
+{% extends 'basicTemplate.html' %}
+{% block title %} Detailed Student View {% endblock %}
+{% block content %}
+<h1> Student Name: {{student.name}}</h1>
+<h1>Student USN: {{student.usn}}</h1>
+<h1> Student Sem: {{student.sem}}</h1>
+{% endblock %}
+
+P11 Start
