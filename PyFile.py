@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 import pyperclip
 
 # Replace with your GitHub repository URL
-GITHUB_URL = 'https://github.com/username/repository/tree/main'
+GITHUB_URL = 'https://github.com/BITLibraryComputer1/FSDL/tree/main'
 TARGET_DIR = 'downloaded_html_files'
 
 def download_file(url):
